@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>طلب جديد</title>
+</head>
+<body>
+    <h2>نموذج الطلب</h2>
+    <form method="POST">
+        <label>الاسم:</label><br>
+        <input type="text" name="name"><br><br>
+
+        <label>رقم الهاتف:</label><br>
+        <input type="text" name="phone"><br><br>
+
+        <label>نوع القطعة المطلوبة:</label><br>
+        <input type="text" name="item"><br><br>
+
+        <label>الفئة:</label><br>
+        <select name="category">
+            <option value="سيارة">سيارة</option>
+            <option value="مولد">مولد</option>
+            <option value="كهربائيات">كهربائيات</option>
+        </select><br><br>
+
+        <label>تفاصيل إضافية:</label><br>
+        <textarea name="details"></textarea><br><br>
+
+        <button type="submit">إرسال الطلب</button>
+    </form>
+</body>
+</html>
