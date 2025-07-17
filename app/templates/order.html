@@ -1,119 +1,74 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>طلب قطع غيار - Parts Hunter</title>
+  <title>طلب جديد | Parts Hunter</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
-    .hidden {
-      display: none;
-    }
-    body {
-      background-color: #f8f9fa;
-      direction: rtl;
-    }
-    .container {
-      margin-top: 40px;
-    }
+    .hidden { display: none; }
   </style>
 </head>
-<body>
-  <div class="container">
-    <h2 class="mb-4">طلب قطع غيار</h2>
-    <form method="POST" action="/order">
-      <!-- الاسم -->
-      <div class="mb-3">
-        <label class="form-label">الاسم:</label>
-        <input type="text" name="name" class="form-control" required>
-      </div>
+<body class="container py-5">
+  <h2 class="mb-4 text-center">طلب جديد من Parts Hunter</h2>
+  <form id="orderForm">
+    <div class="mb-3">
+      <label class="form-label">الاسم:</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">رقم الهاتف/الواتساب:</label>
+      <input type="text" name="phone" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">نوع الخدمة:</label>
+      <select name="category" class="form-select" id="category" onchange="showFields()" required>
+        <option value="">-- اختر --</option>
+        <option value="سيارة">سيارة</option>
+        <option value="مولد">مولد</option>
+        <option value="كهربائيات">كهربائيات</option>
+        <option value="أخرى">أخرى</option>
+      </select>
+    </div>
 
-      <!-- رقم الهاتف -->
-      <div class="mb-3">
-        <label class="form-label">رقم الهاتف أو واتساب:</label>
-        <input type="text" name="phone" class="form-control" required>
-      </div>
+    <!-- سيارة -->
+    <div id="carFields" class="hidden">
+      <div class="mb-3"><label>براند السيارة:</label><input type="text" name="car_brand" class="form-control"></div>
+      <div class="mb-3"><label>الموديل:</label><input type="text" name="car_model" class="form-control"></div>
+      <div class="mb-3"><label>نوع الوقود:</label><input type="text" name="car_fuel" class="form-control"></div>
+      <div class="mb-3"><label>رقم الشاسيه:</label><input type="text" name="car_serial" class="form-control"></div>
+    </div>
 
-      <!-- الفئة -->
-      <div class="mb-3">
-        <label class="form-label">نوع الطلب:</label>
-        <select name="category" class="form-select" id="category" onchange="showFields()" required>
-          <option value="">-- اختر --</option>
-          <option value="سيارة">سيارة</option>
-          <option value="مولد">مولد</option>
-          <option value="كهربائيات">كهربائيات</option>
-          <option value="أخرى">أخرى</option>
-        </select>
-      </div>
+    <!-- مولد -->
+    <div id="generatorFields" class="hidden">
+      <div class="mb-3"><label>نوع المولد:</label><input type="text" name="gen_type" class="form-control"></div>
+      <div class="mb-3"><label>السعة:</label><input type="text" name="gen_capacity" class="form-control"></div>
+      <div class="mb-3"><label>نوع الوقود:</label><input type="text" name="gen_fuel" class="form-control"></div>
+      <div class="mb-3"><label>السيريال نمبر:</label><input type="text" name="gen_serial" class="form-control"></div>
+    </div>
 
-      <!-- 🚗 معلومات السيارة -->
-      <div id="carFields" class="hidden">
-        <div class="mb-3">
-          <label class="form-label">براند السيارة:</label>
-          <input type="text" name="car_brand" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">الموديل:</label>
-          <input type="text" name="car_model" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">نوع الوقود:</label>
-          <input type="text" name="car_fuel" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">رقم الشاسيه أو السيريال:</label>
-          <input type="text" name="car_serial" class="form-control">
-        </div>
-      </div>
+    <!-- كهربائيات -->
+    <div id="electricFields" class="hidden">
+      <div class="mb-3"><label>نوع القطعة:</label><input type="text" name="elec_type" class="form-control"></div>
+      <div class="mb-3"><label>المواصفات/الماركة:</label><input type="text" name="elec_brand" class="form-control"></div>
+    </div>
 
-      <!-- ⚡ معلومات المولد -->
-      <div id="generatorFields" class="hidden">
-        <div class="mb-3">
-          <label class="form-label">نوع المولد:</label>
-          <input type="text" name="gen_type" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">السعة (كيلووات):</label>
-          <input type="text" name="gen_capacity" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">نوع الوقود:</label>
-          <input type="text" name="gen_fuel" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">السيريال نمبر:</label>
-          <input type="text" name="gen_serial" class="form-control">
-        </div>
-      </div>
+    <!-- أخرى -->
+    <div id="otherFields" class="hidden">
+      <div class="mb-3"><label>حدد نوع الجهاز أو الخدمة:</label><input type="text" name="other_detail" class="form-control"></div>
+    </div>
 
-      <!-- ⚙️ معلومات الكهربائيات -->
-      <div id="electricFields" class="hidden">
-        <div class="mb-3">
-          <label class="form-label">نوع القطعة الكهربائية:</label>
-          <input type="text" name="elec_type" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label class="form-label">العلامة التجارية أو المواصفات:</label>
-          <input type="text" name="elec_brand" class="form-control">
-        </div>
-      </div>
+    <!-- وصف إضافي -->
+    <div class="mb-3">
+      <label class="form-label">وصف إضافي للطلب:</label>
+      <textarea name="description" class="form-control" rows="3"></textarea>
+    </div>
 
-      <!-- ❓ أخرى -->
-      <div id="otherFields" class="hidden">
-        <div class="mb-3">
-          <label class="form-label">حدد نوع الجهاز أو التفاصيل:</label>
-          <input type="text" name="other_detail" class="form-control">
-        </div>
-      </div>
-
-      <!-- وصف الطلب -->
-      <div class="mb-3">
-        <label class="form-label">وصف الطلب أو المشكلة:</label>
-        <textarea name="description" class="form-control" rows="4" required></textarea>
-      </div>
-
-      <button type="submit" class="btn btn-primary">إرسال الطلب</button>
-    </form>
-  </div>
+    <!-- زر الإرسال -->
+    <div class="d-flex gap-3">
+      <button type="button" class="btn btn-success" onclick="sendToWhatsApp('971566672873')">أرسل إلى الإمارات</button>
+      <button type="button" class="btn btn-primary" onclick="sendToWhatsApp('249912654405')">أرسل إلى السودان</button>
+    </div>
+  </form>
 
   <script>
     function showFields() {
@@ -122,6 +77,46 @@
       document.getElementById("generatorFields").style.display = (cat === "مولد") ? "block" : "none";
       document.getElementById("electricFields").style.display = (cat === "كهربائيات") ? "block" : "none";
       document.getElementById("otherFields").style.display = (cat === "أخرى") ? "block" : "none";
+    }
+
+    function sendToWhatsApp(number) {
+      const name = document.querySelector('input[name="name"]').value;
+      const phone = document.querySelector('input[name="phone"]').value;
+      const category = document.querySelector('select[name="category"]').value;
+      const description = document.querySelector('textarea[name="description"]').value;
+
+      let extra = "";
+
+      if (category === "سيارة") {
+        extra = `
+🚗 براند السيارة: ${document.querySelector('input[name="car_brand"]').value}
+📅 الموديل: ${document.querySelector('input[name="car_model"]').value}
+⛽ نوع الوقود: ${document.querySelector('input[name="car_fuel"]').value}
+🔢 رقم الشاسيه: ${document.querySelector('input[name="car_serial"]').value}`;
+      } else if (category === "مولد") {
+        extra = `
+⚡ نوع المولد: ${document.querySelector('input[name="gen_type"]').value}
+⚙️ السعة: ${document.querySelector('input[name="gen_capacity"]').value}
+⛽ الوقود: ${document.querySelector('input[name="gen_fuel"]').value}
+🔢 السيريال نمبر: ${document.querySelector('input[name="gen_serial"]').value}`;
+      } else if (category === "كهربائيات") {
+        extra = `
+🔌 نوع القطعة: ${document.querySelector('input[name="elec_type"]').value}
+🏷️ المواصفات: ${document.querySelector('input[name="elec_brand"]').value}`;
+      } else if (category === "أخرى") {
+        extra = `
+❓ تفاصيل الجهاز: ${document.querySelector('input[name="other_detail"]').value}`;
+      }
+
+      const message = `*طلب جديد من موقع Parts Hunter*
+👤 الاسم: ${name}
+📞 الهاتف/واتساب: ${phone}
+📦 نوع الطلب: ${category}
+📝 التفاصيل: ${description}
+${extra}`;
+
+      const encoded = encodeURIComponent(message);
+      window.open(`https://wa.me/${number}?text=${encoded}`, "_blank");
     }
   </script>
 </body>
