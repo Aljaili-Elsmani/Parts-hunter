@@ -24,6 +24,10 @@
     .form-section.active {
       display: block;
     }
+    .other-input {
+      display: none;
+      margin-top: 5px;
+    }
   </style>
 </head>
 <body class="bg-light text-end">
@@ -49,10 +53,40 @@
 
       <!-- 🚗 سيارة / شاحنة / موتر -->
       <div id="car" class="form-section active">
-        <div class="mb-2"><input type="text" name="brand" class="form-control" placeholder="براند المركبة" /></div>
-        <div class="mb-2"><input type="text" name="model" class="form-control" placeholder="موديل المركبة" /></div>
+        <div class="mb-2">
+          <label>براند المركبة:</label>
+          <select name="brand_car" class="form-select" onchange="updateModels(this.value, 'model_car', 'modelCarOther', 'brandCarOther')">
+            <option disabled selected>اختر براند المركبة</option>
+            <option value="تويوتا">تويوتا</option>
+            <option value="نيسان">نيسان</option>
+            <option value="هيونداي">هيونداي</option>
+            <option value="ميتسوبيشي">ميتسوبيشي</option>
+            <option value="هوندا">هوندا</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+          <input type="text" name="brand_car_other" id="brandCarOther" class="form-control other-input" placeholder="اكتب براند المركبة" />
+        </div>
 
-        <!-- نوع المحرك -->
+        <div class="mb-2">
+          <label>موديل المركبة:</label>
+          <select name="model_car" id="model_car" class="form-select" onchange="checkOther(this, 'modelCarOther')">
+            <option disabled selected>اختر موديل المركبة</option>
+          </select>
+          <input type="text" name="model_car_other" id="modelCarOther" class="form-control other-input" placeholder="اكتب موديل المركبة" />
+        </div>
+
+        <div class="mb-2">
+          <label>سنة الصنع:</label>
+          <select name="year" class="form-select">
+            <option disabled selected>اختر السنة</option>
+            <script>
+              for(let y = 2026; y >= 1960; y--) {
+                document.write(`<option value="${y}">${y}</option>`);
+              }
+            </script>
+          </select>
+        </div>
+
         <div class="mb-2">
           <label class="form-label">نوع المحرك:</label><br/>
           <div class="form-check form-check-inline">
@@ -65,7 +99,6 @@
           </div>
         </div>
 
-        <!-- نوع الوقود -->
         <div class="mb-2" id="fuelField">
           <label class="form-label">نوع الوقود:</label>
           <select name="fuel" class="form-select">
@@ -79,7 +112,18 @@
 
       <!-- ⚡ مولد -->
       <div id="gen" class="form-section">
-        <div class="mb-2"><input type="text" name="gen_type" class="form-control" placeholder="نوع المولد" /></div>
+        <div class="mb-2">
+          <label>نوع المولد:</label>
+          <select name="gen_type" class="form-select">
+            <option disabled selected>اختر نوع المولد</option>
+            <option value="بيركنز">بيركنز</option>
+            <option value="كاتربيلر">كاتربيلر</option>
+            <option value="كوبوتا">كوبوتا</option>
+            <option value="يانمار">يانمار</option>
+            <option value="كومنز">كومنز</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
         <div class="mb-2"><input type="text" name="gen_capacity" class="form-control" placeholder="السعة بالكيلو فولت" /></div>
         <div class="mb-2"><input type="text" name="gen_fuel" class="form-control" placeholder="نوع الوقود" /></div>
         <div class="mb-2"><input type="text" name="gen_serial" class="form-control" placeholder="السيريال نمبر (إن وجد)" /></div>
@@ -87,7 +131,18 @@
 
       <!-- 🔌 كهربائيات -->
       <div id="elec" class="form-section">
-        <div class="mb-2"><input type="text" name="elec_type" class="form-control" placeholder="نوع القطعة الكهربائية" /></div>
+        <div class="mb-2">
+          <label>نوع الجهاز:</label>
+          <select name="elec_type" class="form-select">
+            <option disabled selected>اختر نوع الجهاز</option>
+            <option value="ثلاجة">ثلاجة</option>
+            <option value="غسالة">غسالة</option>
+            <option value="بوتوجاز">بوتوجاز</option>
+            <option value="مكيف">مكيف</option>
+            <option value="مايكرويف">مايكرويف</option>
+            <option value="أخرى">أخرى</option>
+          </select>
+        </div>
         <div class="mb-2"><input type="text" name="elec_brand" class="form-control" placeholder="المواصفات أو البراند" /></div>
       </div>
 
@@ -101,12 +156,19 @@
         <button type="reset" class="btn btn-secondary">مسح</button>
         <button type="button" class="btn btn-success" onclick="sendToWhatsApp('971566672873')">إرسال</button>
       </div>
-
     </form>
   </div>
 </div>
 
 <script>
+  const carModelsByBrand = {
+    "تويوتا": ["كامري", "كورولا", "راف4", "برادو", "هايلوكس"],
+    "نيسان": ["صني", "ألتيما", "باترول"],
+    "هيونداي": ["ألنترا", "سوناتا", "توسان"],
+    "ميتسوبيشي": ["لانسر", "باجيرو"],
+    "هوندا": ["سيفيك", "أكورد"]
+  };
+
   function switchTab(tabId) {
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
@@ -118,6 +180,59 @@
     document.getElementById("fuelField").style.display = (value === "احتراق") ? "block" : "none";
   }
 
+  function updateModels(brand, modelSelectId, modelOtherId, brandOtherId) {
+    const modelSelect = document.getElementById(modelSelectId);
+    const modelOther = document.getElementById(modelOtherId);
+    const brandOther = document.getElementById(brandOtherId);
+
+    if (brand === "أخرى") {
+      brandOther.style.display = "block";
+      brandOther.required = true;
+      modelSelect.style.display = "none";
+      modelOther.style.display = "block";
+      modelOther.required = true;
+      modelSelect.innerHTML = "";
+      return;
+    }
+
+    brandOther.style.display = "none";
+    brandOther.required = false;
+    brandOther.value = "";
+
+    modelSelect.style.display = "block";
+    modelOther.style.display = "none";
+    modelOther.required = false;
+    modelOther.value = "";
+
+    modelSelect.innerHTML = '<option disabled selected>اختر موديل المركبة</option>';
+
+    if (carModelsByBrand[brand]) {
+      carModelsByBrand[brand].forEach(mod => {
+        const opt = document.createElement("option");
+        opt.value = mod;
+        opt.textContent = mod;
+        modelSelect.appendChild(opt);
+      });
+    }
+
+    const otherOpt = document.createElement("option");
+    otherOpt.value = "أخرى";
+    otherOpt.textContent = "أخرى";
+    modelSelect.appendChild(otherOpt);
+  }
+
+  function checkOther(selectElem, inputId) {
+    const input = document.getElementById(inputId);
+    if (selectElem.value === "أخرى") {
+      input.style.display = "block";
+      input.required = true;
+    } else {
+      input.style.display = "none";
+      input.required = false;
+      input.value = "";
+    }
+  }
+
   function sendToWhatsApp(number) {
     const form = document.getElementById('orderForm');
     const name = form.name.value;
@@ -126,9 +241,11 @@
 
     let message = `*طلب جديد من موقع Parts Hunter*%0A👤 الاسم: ${name}%0A📞 الهاتف: ${phone}%0A📝 تفاصيل القطعة: ${description}`;
 
-    // إضافة التفاصيل حسب القسم الظاهر
     if (document.getElementById("car").classList.contains("active")) {
-      message += `%0A🚗 براند المركبة: ${form.brand.value}%0A📅 الموديل: ${form.model.value}`;
+      const brand = form.brand_car.value === "أخرى" ? form.brand_car_other.value : form.brand_car.value;
+      const model = form.model_car.value === "أخرى" ? form.model_car_other.value : form.model_car.value;
+      const year = form.year.value;
+      message += `%0A🚗 براند: ${brand}%0A📅 موديل: ${model}%0A📆 سنة الصنع: ${year}`;
       if (form.engine_type.value === "احتراق") {
         message += `%0A⛽ الوقود: ${form.fuel.value}`;
       }
@@ -136,7 +253,7 @@
     } else if (document.getElementById("gen").classList.contains("active")) {
       message += `%0A⚡ نوع المولد: ${form.gen_type.value}%0A⚙️ السعة: ${form.gen_capacity.value}%0A⛽ الوقود: ${form.gen_fuel.value}%0A🔢 السيريال: ${form.gen_serial.value}`;
     } else if (document.getElementById("elec").classList.contains("active")) {
-      message += `%0A🔌 نوع القطعة: ${form.elec_type.value}%0A🏷️ المواصفات: ${form.elec_brand.value}`;
+      message += `%0A🔌 نوع الجهاز: ${form.elec_type.value}%0A🏷️ المواصفات: ${form.elec_brand.value}`;
     }
 
     window.open(`https://wa.me/${number}?text=${message}`, "_blank");
