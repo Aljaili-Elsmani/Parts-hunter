@@ -5,125 +5,143 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>طلب قطع غيار - Parts Hunter</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+  <style>
+    .tab-button {
+      cursor: pointer;
+      padding: 10px 15px;
+      border: none;
+      border-bottom: 3px solid transparent;
+      background: none;
+    }
+    .tab-button.active {
+      border-bottom: 3px solid #f90;
+      font-weight: bold;
+      color: #f90;
+    }
+    .form-section {
+      display: none;
+    }
+    .form-section.active {
+      display: block;
+    }
+  </style>
 </head>
 <body class="bg-light text-end">
 
-  <div class="container mt-5">
-    <div class="card p-4 shadow">
-      <h2 class="text-center mb-4">نموذج طلب قطع الغيار</h2>
-      <form id="orderForm">
+<div class="container mt-5">
+  <div class="card p-4 shadow">
+    <h3 class="text-center mb-4">طلب قطع غيار</h3>
 
-        <div class="mb-3">
-          <label class="form-label">الاسم:</label>
-          <input type="text" name="name" class="form-control" required />
+    <!-- Tabs -->
+    <div class="d-flex justify-content-around mb-3">
+      <button class="tab-button active" onclick="switchTab('car')">🚗 سيارة</button>
+      <button class="tab-button" onclick="switchTab('truck')">🚚 شاحنة</button>
+      <button class="tab-button" onclick="switchTab('bike')">🏍️ موتر</button>
+      <button class="tab-button" onclick="switchTab('gen')">⚡ مولد</button>
+      <button class="tab-button" onclick="switchTab('elec')">🔌 كهربائيات</button>
+    </div>
+
+    <form id="orderForm">
+
+      <!-- بيانات عامة -->
+      <div class="mb-3"><input type="text" name="name" class="form-control" placeholder="الاسم" required /></div>
+      <div class="mb-3"><input type="text" name="phone" class="form-control" placeholder="رقم الهاتف أو واتساب" required /></div>
+
+      <!-- 🚗 سيارة / شاحنة / موتر -->
+      <div id="car" class="form-section active">
+        <div class="mb-2"><input type="text" name="brand" class="form-control" placeholder="براند المركبة" /></div>
+        <div class="mb-2"><input type="text" name="model" class="form-control" placeholder="موديل المركبة" /></div>
+
+        <!-- نوع المحرك -->
+        <div class="mb-2">
+          <label class="form-label">نوع المحرك:</label><br/>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="engine_type" value="احتراق" checked onchange="toggleFuel(this.value)">
+            <label class="form-check-label">احتراق داخلي</label>
+          </div>
+          <div class="form-check form-check-inline">
+            <input class="form-check-input" type="radio" name="engine_type" value="كهربائي" onchange="toggleFuel(this.value)">
+            <label class="form-check-label">كهربائي</label>
+          </div>
         </div>
 
-        <div class="mb-3">
-          <label class="form-label">رقم الهاتف أو واتساب:</label>
-          <input type="text" name="phone" class="form-control" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">نوع الخدمة:</label>
-          <select name="category" class="form-select" onchange="showExtraFields(this.value)" required>
-            <option value="">-- اختر --</option>
-            <option value="سيارة">قطع غيار سيارات</option>
-            <option value="مولد">مولد كهرباء</option>
-            <option value="كهربائيات">مستلزمات كهربائية</option>
-            <option value="أخرى">أخرى</option>
+        <!-- نوع الوقود -->
+        <div class="mb-2" id="fuelField">
+          <label class="form-label">نوع الوقود:</label>
+          <select name="fuel" class="form-select">
+            <option value="بنزين">بنزين</option>
+            <option value="جازولين">جازولين</option>
           </select>
         </div>
 
-        <!-- سيارات -->
-        <div id="carFields" style="display:none">
-          <div class="mb-2"><input type="text" name="car_brand" class="form-control" placeholder="براند السيارة" /></div>
-          <div class="mb-2"><input type="text" name="car_model" class="form-control" placeholder="موديل السيارة" /></div>
-          <div class="mb-2"><input type="text" name="car_fuel" class="form-control" placeholder="نوع الوقود" /></div>
-          <div class="mb-2"><input type="text" name="car_serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" /></div>
-        </div>
+        <div class="mb-2"><input type="text" name="serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" /></div>
+      </div>
 
-        <!-- مولد -->
-        <div id="genFields" style="display:none">
-          <div class="mb-2"><input type="text" name="gen_type" class="form-control" placeholder="نوع المولد" /></div>
-          <div class="mb-2"><input type="text" name="gen_capacity" class="form-control" placeholder="السعة بالكيلو فولت" /></div>
-          <div class="mb-2"><input type="text" name="gen_fuel" class="form-control" placeholder="نوع الوقود" /></div>
-          <div class="mb-2"><input type="text" name="gen_serial" class="form-control" placeholder="السيريال نمبر (إن وجد)" /></div>
-        </div>
+      <!-- ⚡ مولد -->
+      <div id="gen" class="form-section">
+        <div class="mb-2"><input type="text" name="gen_type" class="form-control" placeholder="نوع المولد" /></div>
+        <div class="mb-2"><input type="text" name="gen_capacity" class="form-control" placeholder="السعة بالكيلو فولت" /></div>
+        <div class="mb-2"><input type="text" name="gen_fuel" class="form-control" placeholder="نوع الوقود" /></div>
+        <div class="mb-2"><input type="text" name="gen_serial" class="form-control" placeholder="السيريال نمبر (إن وجد)" /></div>
+      </div>
 
-        <!-- كهربائيات -->
-        <div id="elecFields" style="display:none">
-          <div class="mb-2"><input type="text" name="elec_type" class="form-control" placeholder="نوع القطعة الكهربائية" /></div>
-          <div class="mb-2"><input type="text" name="elec_brand" class="form-control" placeholder="المواصفات أو البراند" /></div>
-        </div>
+      <!-- 🔌 كهربائيات -->
+      <div id="elec" class="form-section">
+        <div class="mb-2"><input type="text" name="elec_type" class="form-control" placeholder="نوع القطعة الكهربائية" /></div>
+        <div class="mb-2"><input type="text" name="elec_brand" class="form-control" placeholder="المواصفات أو البراند" /></div>
+      </div>
 
-        <!-- أخرى -->
-        <div id="otherFields" style="display:none">
-          <div class="mb-2"><input type="text" name="other_detail" class="form-control" placeholder="تفاصيل الطلب" /></div>
-        </div>
+      <!-- وصف القطعة -->
+      <div class="mb-3">
+        <textarea name="description" class="form-control" rows="3" placeholder="وصف القطعة المطلوبة" required></textarea>
+      </div>
 
-        <div class="mb-3">
-          <label class="form-label">نوع القطعة وتفاصيلها:</label>
-          <textarea name="description" class="form-control" rows="3" required></textarea>
-        </div>
+      <!-- أزرار -->
+      <div class="d-flex gap-3 justify-content-between">
+        <button type="reset" class="btn btn-secondary">مسح</button>
+        <button type="button" class="btn btn-success" onclick="sendToWhatsApp('971566672873')">إرسال</button>
+      </div>
 
-        <div class="d-flex gap-3">
-          <button type="button" class="btn btn-success" onclick="sendToWhatsApp('971566672873')">إرسال</button>
-          <button type="button" class="btn btn-primary" onclick="sendToWhatsApp('249912654405')">إرسال</button>
-          <button type="button" class="btn btn-warning" onclick="sendToWhatsApp('249917154054')">إرسال</button>
-        </div>
-
-      </form>
-    </div>
+    </form>
   </div>
+</div>
 
-  <script>
-    function showExtraFields(value) {
-      document.getElementById("carFields").style.display = value === "سيارة" ? "block" : "none";
-      document.getElementById("genFields").style.display = value === "مولد" ? "block" : "none";
-      document.getElementById("elecFields").style.display = value === "كهربائيات" ? "block" : "none";
-      document.getElementById("otherFields").style.display = value === "أخرى" ? "block" : "none";
-    }
+<script>
+  function switchTab(tabId) {
+    document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
+    document.querySelector(`button[onclick="switchTab('${tabId}')"]`).classList.add('active');
+    document.getElementById(tabId).classList.add('active');
+  }
 
-    function sendToWhatsApp(number) {
-      const name = document.querySelector('input[name="name"]').value;
-      const phone = document.querySelector('input[name="phone"]').value;
-      const category = document.querySelector('select[name="category"]').value;
-      const description = document.querySelector('textarea[name="description"]').value;
+  function toggleFuel(value) {
+    document.getElementById("fuelField").style.display = (value === "احتراق") ? "block" : "none";
+  }
 
-      let extra = "";
+  function sendToWhatsApp(number) {
+    const form = document.getElementById('orderForm');
+    const name = form.name.value;
+    const phone = form.phone.value;
+    const description = form.description.value;
 
-      if (category === "سيارة") {
-        extra = `
-🚗 براند السيارة: ${document.querySelector('input[name="car_brand"]').value}
-📅 الموديل: ${document.querySelector('input[name="car_model"]').value}
-⛽ نوع الوقود: ${document.querySelector('input[name="car_fuel"]').value}
-🔢 رقم الشاسيه: ${document.querySelector('input[name="car_serial"]').value}`;
-      } else if (category === "مولد") {
-        extra = `
-⚡ نوع المولد: ${document.querySelector('input[name="gen_type"]').value}
-⚙️ السعة: ${document.querySelector('input[name="gen_capacity"]').value}
-⛽ الوقود: ${document.querySelector('input[name="gen_fuel"]').value}
-🔢 السيريال نمبر: ${document.querySelector('input[name="gen_serial"]').value}`;
-      } else if (category === "كهربائيات") {
-        extra = `
-🔌 نوع القطعة: ${document.querySelector('input[name="elec_type"]').value}
-🏷️ المواصفات: ${document.querySelector('input[name="elec_brand"]').value}`;
-      } else if (category === "أخرى") {
-        extra = `
-❓ تفاصيل الجهاز: ${document.querySelector('input[name="other_detail"]').value}`;
+    let message = `*طلب جديد من موقع Parts Hunter*%0A👤 الاسم: ${name}%0A📞 الهاتف: ${phone}%0A📝 تفاصيل القطعة: ${description}`;
+
+    // إضافة التفاصيل حسب القسم الظاهر
+    if (document.getElementById("car").classList.contains("active")) {
+      message += `%0A🚗 براند المركبة: ${form.brand.value}%0A📅 الموديل: ${form.model.value}`;
+      if (form.engine_type.value === "احتراق") {
+        message += `%0A⛽ الوقود: ${form.fuel.value}`;
       }
-
-      const message = `*طلب جديد من موقع Parts Hunter*
-👤 الاسم: ${name}
-📞 الهاتف/واتساب: ${phone}
-📦 نوع الطلب: ${category}
-📝 نوع القطعة وتفاصيلها: ${description}
-${extra}`;
-
-      const encoded = encodeURIComponent(message);
-      window.open(`https://wa.me/${number}?text=${encoded}`, "_blank");
+      message += `%0A🔢 الشاسيه: ${form.serial.value}`;
+    } else if (document.getElementById("gen").classList.contains("active")) {
+      message += `%0A⚡ نوع المولد: ${form.gen_type.value}%0A⚙️ السعة: ${form.gen_capacity.value}%0A⛽ الوقود: ${form.gen_fuel.value}%0A🔢 السيريال: ${form.gen_serial.value}`;
+    } else if (document.getElementById("elec").classList.contains("active")) {
+      message += `%0A🔌 نوع القطعة: ${form.elec_type.value}%0A🏷️ المواصفات: ${form.elec_brand.value}`;
     }
-  </script>
+
+    window.open(`https://wa.me/${number}?text=${message}`, "_blank");
+  }
+</script>
 
 </body>
 </html>
