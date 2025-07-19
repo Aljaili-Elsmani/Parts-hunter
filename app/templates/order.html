@@ -2,199 +2,165 @@
 {% block title %}طلب قطع غيار - Parts Hunter{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-  <div class="card p-4 shadow">
-    <h3 class="text-center mb-4">طلب قطع غيار</h3>
+<div class="order-container">
+  <h3 class="text-center mb-4">طلب قطع غيار</h3>
 
-    <!-- التبويبات -->
-    <div class="d-flex justify-content-around mb-3">
-      <button class="tab-button active" onclick="switchTab('car')">🚗 سيارة</button>
-      <button class="tab-button" onclick="switchTab('truck')">🚚 شاحنة</button>
-      <button class="tab-button" onclick="switchTab('bike')">🏍️ موتر</button>
-      <button class="tab-button" onclick="switchTab('gen')">⚡ مولد</button>
-      <button class="tab-button" onclick="switchTab('elec')">🔌 كهربائيات</button>
+  <!-- التبويبات -->
+  <div class="tabs">
+    <button class="tab-button active" onclick="switchTab('car')">🚗 سيارة</button>
+    <button class="tab-button" onclick="switchTab('truck')">🚚 شاحنة</button>
+    <button class="tab-button" onclick="switchTab('bike')">🏍️ موتر</button>
+    <button class="tab-button" onclick="switchTab('gen')">⚡ مولد</button>
+    <button class="tab-button" onclick="switchTab('elec')">🔌 كهربائيات</button>
+  </div>
+
+  <form id="orderForm">
+    <input type="text" name="name" placeholder="الاسم" required />
+    <input type="text" name="phone" placeholder="رقم الهاتف أو واتساب" required />
+
+    <!-- سيارات -->
+    <div id="car" class="form-section active">
+      <label>براند المركبة:</label>
+      <select name="car_brand" onchange="updateModels('car')">
+        <option value="">اختر البراند</option>
+      </select>
+
+      <label>موديل المركبة:</label>
+      <select name="car_model" onchange="checkOtherModel('car')">
+        <option value="">اختر الموديل</option>
+      </select>
+      <input type="text" name="car_model_other" placeholder="اكتب موديل آخر" style="display:none;" />
+
+      <label>سنة الصنع:</label>
+      <select name="car_year"></select>
+
+      <label>نوع المحرك:</label>
+      <div class="engine-type">
+        <label><input type="radio" name="car_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'car')" /> احتراق داخلي</label>
+        <label><input type="radio" name="car_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'car')" /> كهربائي</label>
+      </div>
+
+      <div id="car_fuelField">
+        <label>نوع الوقود:</label>
+        <select name="car_fuel">
+          <option>بنزين</option>
+          <option>جازولين</option>
+        </select>
+      </div>
+
+      <input type="text" name="car_serial" placeholder="رقم الشاسيه (إن وجد)" />
     </div>
 
-    <form id="orderForm">
-      <div class="mb-3"><input type="text" name="name" class="form-control" placeholder="الاسم" required /></div>
-      <div class="mb-3"><input type="text" name="phone" class="form-control" placeholder="رقم الهاتف أو واتساب" required /></div>
+    <!-- شاحنات -->
+    <div id="truck" class="form-section">
+      <label>براند الشاحنة:</label>
+      <select name="truck_brand" onchange="updateModels('truck')">
+        <option value="">اختر البراند</option>
+      </select>
 
-      <!-- سيارات -->
-      <div id="car" class="form-section active">
-        <div class="mb-2">
-          <label>براند المركبة:</label>
-          <select name="car_brand" class="form-select" onchange="updateModels('car')">
-            <option value="">اختر البراند</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label>موديل المركبة:</label>
-          <select name="car_model" class="form-select" onchange="checkOtherModel('car')">
-            <option value="">اختر الموديل</option>
-          </select>
-          <input type="text" name="car_model_other" class="form-control mt-2" placeholder="اكتب موديل آخر" style="display:none;" />
-        </div>
-        <div class="mb-2">
-          <label>سنة الصنع:</label>
-          <select name="car_year" class="form-select"></select>
-        </div>
-        <div class="mb-2">
-          <label>نوع المحرك:</label><br />
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="car_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'car')" />
-            <label class="form-check-label">احتراق داخلي</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="car_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'car')" />
-            <label class="form-check-label">كهربائي</label>
-          </div>
-        </div>
-        <div class="mb-2" id="car_fuelField">
-          <label>نوع الوقود:</label>
-          <select name="car_fuel" class="form-select">
-            <option>بنزين</option>
-            <option>جازولين</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <input type="text" name="car_serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" />
-        </div>
+      <label>موديل الشاحنة:</label>
+      <select name="truck_model" onchange="checkOtherModel('truck')">
+        <option value="">اختر الموديل</option>
+      </select>
+      <input type="text" name="truck_model_other" placeholder="اكتب موديل آخر" style="display:none;" />
+
+      <label>سنة الصنع:</label>
+      <select name="truck_year"></select>
+
+      <label>نوع المحرك:</label>
+      <div class="engine-type">
+        <label><input type="radio" name="truck_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'truck')" /> احتراق داخلي</label>
+        <label><input type="radio" name="truck_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'truck')" /> كهربائي</label>
       </div>
 
-      <!-- شاحنات -->
-      <div id="truck" class="form-section">
-        <div class="mb-2">
-          <label>براند الشاحنة:</label>
-          <select name="truck_brand" class="form-select" onchange="updateModels('truck')">
-            <option value="">اختر البراند</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label>موديل الشاحنة:</label>
-          <select name="truck_model" class="form-select" onchange="checkOtherModel('truck')">
-            <option value="">اختر الموديل</option>
-          </select>
-          <input type="text" name="truck_model_other" class="form-control mt-2" placeholder="اكتب موديل آخر" style="display:none;" />
-        </div>
-        <div class="mb-2">
-          <label>سنة الصنع:</label>
-          <select name="truck_year" class="form-select"></select>
-        </div>
-        <div class="mb-2">
-          <label>نوع المحرك:</label><br />
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="truck_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'truck')" />
-            <label class="form-check-label">احتراق داخلي</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="truck_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'truck')" />
-            <label class="form-check-label">كهربائي</label>
-          </div>
-        </div>
-        <div class="mb-2" id="truck_fuelField">
-          <label>نوع الوقود:</label>
-          <select name="truck_fuel" class="form-select">
-            <option>ديزل</option>
-            <option>بنزين</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <input type="text" name="truck_serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" />
-        </div>
+      <div id="truck_fuelField">
+        <label>نوع الوقود:</label>
+        <select name="truck_fuel">
+          <option>ديزل</option>
+          <option>بنزين</option>
+        </select>
       </div>
 
-      <!-- موتورات -->
-      <div id="bike" class="form-section">
-        <div class="mb-2">
-          <label>براند الموتور:</label>
-          <select name="bike_brand" class="form-select" onchange="updateModels('bike')">
-            <option value="">اختر البراند</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <label>موديل الموتور:</label>
-          <select name="bike_model" class="form-select" onchange="checkOtherModel('bike')">
-            <option value="">اختر الموديل</option>
-          </select>
-          <input type="text" name="bike_model_other" class="form-control mt-2" placeholder="اكتب موديل آخر" style="display:none;" />
-        </div>
-        <div class="mb-2">
-          <label>سنة الصنع:</label>
-          <select name="bike_year" class="form-select"></select>
-        </div>
-        <div class="mb-2">
-          <label>نوع المحرك:</label><br />
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bike_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'bike')" />
-            <label class="form-check-label">احتراق داخلي</label>
-          </div>
-          <div class="form-check form-check-inline">
-            <input class="form-check-input" type="radio" name="bike_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'bike')" />
-            <label class="form-check-label">كهربائي</label>
-          </div>
-        </div>
-        <div class="mb-2" id="bike_fuelField">
-          <label>نوع الوقود:</label>
-          <select name="bike_fuel" class="form-select">
-            <option>بنزين</option>
-            <option>جازولين</option>
-          </select>
-        </div>
-        <div class="mb-2">
-          <input type="text" name="bike_serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" />
-        </div>
+      <input type="text" name="truck_serial" placeholder="رقم الشاسيه (إن وجد)" />
+    </div>
+
+    <!-- موتورات -->
+    <div id="bike" class="form-section">
+      <label>براند الموتور:</label>
+      <select name="bike_brand" onchange="updateModels('bike')">
+        <option value="">اختر البراند</option>
+      </select>
+
+      <label>موديل الموتور:</label>
+      <select name="bike_model" onchange="checkOtherModel('bike')">
+        <option value="">اختر الموديل</option>
+      </select>
+      <input type="text" name="bike_model_other" placeholder="اكتب موديل آخر" style="display:none;" />
+
+      <label>سنة الصنع:</label>
+      <select name="bike_year"></select>
+
+      <label>نوع المحرك:</label>
+      <div class="engine-type">
+        <label><input type="radio" name="bike_engine_type" value="احتراق" checked onchange="toggleFuel(this.value, 'bike')" /> احتراق داخلي</label>
+        <label><input type="radio" name="bike_engine_type" value="كهربائي" onchange="toggleFuel(this.value, 'bike')" /> كهربائي</label>
       </div>
 
-      <!-- مولد -->
-      <div id="gen" class="form-section">
-        <div class="mb-2">
-          <label>نوع المولد:</label>
-          <select class="form-select" name="gen_type">
-            <option>بيركنز</option>
-            <option>كاتربيلر</option>
-            <option>كوبوتا</option>
-            <option>يانمار</option>
-            <option>هوندا</option>
-            <option>ياماها</option>
-            <option>أخرى</option>
-          </select>
-        </div>
-        <div class="mb-2"><input type="text" name="gen_capacity" class="form-control" placeholder="السعة بالكيلو فولت" /></div>
-        <div class="mb-2"><input type="text" name="gen_fuel" class="form-control" placeholder="نوع الوقود" /></div>
-        <div class="mb-2"><input type="text" name="gen_serial" class="form-control" placeholder="السيريال نمبر (إن وجد)" /></div>
+      <div id="bike_fuelField">
+        <label>نوع الوقود:</label>
+        <select name="bike_fuel">
+          <option>بنزين</option>
+          <option>جازولين</option>
+        </select>
       </div>
 
-      <!-- كهربائيات -->
-      <div id="elec" class="form-section">
-        <div class="mb-2">
-          <label>نوع القطعة الكهربائية:</label>
-          <select class="form-select" name="elec_type">
-            <option>ثلاجة</option>
-            <option>غسالة</option>
-            <option>بوتوجاز</option>
-            <option>مكيف</option>
-            <option>مايكرويف</option>
-            <option>أخرى</option>
-          </select>
-        </div>
-        <div class="mb-2"><input type="text" name="elec_brand" class="form-control" placeholder="المواصفات أو البراند" /></div>
-      </div>
+      <input type="text" name="bike_serial" placeholder="رقم الشاسيه (إن وجد)" />
+    </div>
 
-      <div class="mb-3">
-        <textarea name="description" class="form-control" rows="3" placeholder="وصف القطعة المطلوبة" required></textarea>
-      </div>
+    <!-- مولد -->
+    <div id="gen" class="form-section">
+      <label>نوع المولد:</label>
+      <select name="gen_type">
+        <option>بيركنز</option>
+        <option>كاتربيلر</option>
+        <option>كوبوتا</option>
+        <option>يانمار</option>
+        <option>هوندا</option>
+        <option>ياماها</option>
+        <option>أخرى</option>
+      </select>
 
-      <div class="d-flex gap-3 justify-content-between">
-        <button type="reset" class="btn btn-secondary">مسح</button>
-        <button type="button" class="btn btn-success" onclick="sendToWhatsApp('971566672873')">إرسال</button>
-      </div>
-    </form>
-  </div>
+      <input type="text" name="gen_capacity" placeholder="السعة بالكيلو فولت" />
+      <input type="text" name="gen_fuel" placeholder="نوع الوقود" />
+      <input type="text" name="gen_serial" placeholder="السيريال نمبر (إن وجد)" />
+    </div>
+
+    <!-- كهربائيات -->
+    <div id="elec" class="form-section">
+      <label>نوع القطعة الكهربائية:</label>
+      <select name="elec_type">
+        <option>ثلاجة</option>
+        <option>غسالة</option>
+        <option>بوتوجاز</option>
+        <option>مكيف</option>
+        <option>مايكرويف</option>
+        <option>أخرى</option>
+      </select>
+
+      <input type="text" name="elec_brand" placeholder="المواصفات أو البراند" />
+    </div>
+
+    <textarea name="description" rows="3" placeholder="وصف القطعة المطلوبة" required></textarea>
+
+    <div class="form-buttons">
+      <button type="reset">مسح</button>
+      <button type="button" onclick="sendToWhatsApp('971566672873')">إرسال</button>
+    </div>
+  </form>
 </div>
 
 <script>
-  // (نفس السكربت اللي أرسلته أنت، بدون تغيير)
-  // بيانات البراندات والموديلات لكل قسم
+  // بيانات البراندات والموديلات
   const data = {
     car: {
       brands: {
@@ -230,10 +196,9 @@
     }
   };
 
+  // ملء السنوات
   const years = [];
-  for(let y=1960; y<=2026; y++){
-    years.push(y);
-  }
+  for(let y=1960; y<=2026; y++) years.push(y);
 
   ["car_year", "truck_year", "bike_year"].forEach(name=>{
     const select = document.getElementsByName(name)[0];
@@ -245,6 +210,7 @@
     });
   });
 
+  // ملء البراندات
   ["car", "truck", "bike"].forEach(section=>{
     const brandSelect = document.getElementsByName(section + "_brand")[0];
     const brands = Object.keys(data[section].brands);
@@ -256,6 +222,7 @@
     });
   });
 
+  // تحديث الموديلات عند اختيار البراند
   function updateModels(section){
     const brandSelect = document.getElementsByName(section + "_brand")[0];
     const modelSelect = document.getElementsByName(section + "_model")[0];
@@ -273,6 +240,7 @@
       });
     }
 
+    // إضافة خيار "أخرى"
     const otherOpt = document.createElement("option");
     otherOpt.value = "أخرى";
     otherOpt.textContent = "أخرى";
@@ -282,6 +250,7 @@
     otherInput.value = "";
   }
 
+  // اظهار حقل كتابة موديل أخرى عند الاختيار
   function checkOtherModel(section){
     const modelSelect = document.getElementsByName(section + "_model")[0];
     const otherInput = document.getElementsByName(section + "_model_other")[0];
@@ -294,6 +263,7 @@
     }
   }
 
+  // إظهار/إخفاء نوع الوقود حسب نوع المحرك
   function toggleFuel(value, tab) {
     const fuelField = document.getElementById(tab + "_fuelField");
     if(fuelField){
@@ -301,6 +271,7 @@
     }
   }
 
+  // تبديل التبويبات
   function switchTab(tabId) {
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
@@ -308,6 +279,7 @@
     document.getElementById(tabId).classList.add('active');
   }
 
+  // إرسال البيانات عبر واتساب
   function sendToWhatsApp(number){
     const form = document.getElementById('orderForm');
     const name = form.name.value.trim();
