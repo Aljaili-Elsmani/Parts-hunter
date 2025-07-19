@@ -1,33 +1,7 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>طلب قطع غيار - Parts Hunter</title>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.rtl.min.css" rel="stylesheet" />
-<style>
-  .tab-button {
-    cursor: pointer;
-    padding: 10px 15px;
-    border: none;
-    border-bottom: 3px solid transparent;
-    background: none;
-  }
-  .tab-button.active {
-    border-bottom: 3px solid #f90;
-    font-weight: bold;
-    color: #f90;
-  }
-  .form-section {
-    display: none;
-  }
-  .form-section.active {
-    display: block;
-  }
-</style>
-</head>
-<body class="bg-light text-end">
+{% extends "base.html" %}
+{% block title %}طلب قطع غيار - Parts Hunter{% endblock %}
 
+{% block content %}
 <div class="container mt-5">
   <div class="card p-4 shadow">
     <h3 class="text-center mb-4">طلب قطع غيار</h3>
@@ -128,7 +102,8 @@
           <input type="text" name="truck_serial" class="form-control" placeholder="رقم الشاسيه (إن وجد)" />
         </div>
       </div>
-            <!-- موتورات -->
+
+      <!-- موتورات -->
       <div id="bike" class="form-section">
         <div class="mb-2">
           <label>براند الموتور:</label>
@@ -218,6 +193,7 @@
 </div>
 
 <script>
+  // (نفس السكربت اللي أرسلته أنت، بدون تغيير)
   // بيانات البراندات والموديلات لكل قسم
   const data = {
     car: {
@@ -254,13 +230,11 @@
     }
   };
 
-  // توليد سنوات الصنع من 1960 إلى 2026
   const years = [];
   for(let y=1960; y<=2026; y++){
     years.push(y);
   }
 
-  // تعبئة سنوات الصنع لكل قسم
   ["car_year", "truck_year", "bike_year"].forEach(name=>{
     const select = document.getElementsByName(name)[0];
     years.forEach(year=>{
@@ -271,7 +245,6 @@
     });
   });
 
-  // تعبئة براندات لكل قسم
   ["car", "truck", "bike"].forEach(section=>{
     const brandSelect = document.getElementsByName(section + "_brand")[0];
     const brands = Object.keys(data[section].brands);
@@ -283,14 +256,12 @@
     });
   });
 
-  // تحديث موديلات بناءً على البراند المختار لكل قسم
   function updateModels(section){
     const brandSelect = document.getElementsByName(section + "_brand")[0];
     const modelSelect = document.getElementsByName(section + "_model")[0];
     const otherInput = document.getElementsByName(section + "_model_other")[0];
     const selectedBrand = brandSelect.value;
 
-    // إزالة الموديلات القديمة
     modelSelect.innerHTML = '<option value="">اختر الموديل</option>';
 
     if(selectedBrand && data[section].brands[selectedBrand]){
@@ -302,18 +273,15 @@
       });
     }
 
-    // إضافة خيار "أخرى"
     const otherOpt = document.createElement("option");
     otherOpt.value = "أخرى";
     otherOpt.textContent = "أخرى";
     modelSelect.appendChild(otherOpt);
 
-    // إخفاء حقل الكتابة اليدوية عند تحديث البراند
     otherInput.style.display = "none";
     otherInput.value = "";
   }
 
-  // إظهار حقل كتابة موديل يدوي عند اختيار "أخرى"
   function checkOtherModel(section){
     const modelSelect = document.getElementsByName(section + "_model")[0];
     const otherInput = document.getElementsByName(section + "_model_other")[0];
@@ -326,7 +294,6 @@
     }
   }
 
-  // إظهار أو إخفاء حقل الوقود حسب نوع المحرك
   function toggleFuel(value, tab) {
     const fuelField = document.getElementById(tab + "_fuelField");
     if(fuelField){
@@ -334,7 +301,6 @@
     }
   }
 
-  // التبديل بين التبويبات
   function switchTab(tabId) {
     document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
     document.querySelectorAll('.form-section').forEach(sec => sec.classList.remove('active'));
@@ -342,7 +308,6 @@
     document.getElementById(tabId).classList.add('active');
   }
 
-  // إرسال بيانات الطلب للواتساب
   function sendToWhatsApp(number){
     const form = document.getElementById('orderForm');
     const name = form.name.value.trim();
@@ -410,6 +375,4 @@
     window.open(waUrl, '_blank');
   }
 </script>
-
-</body>
-</html>
+{% endblock %}
