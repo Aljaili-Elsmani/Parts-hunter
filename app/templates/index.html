@@ -3,25 +3,37 @@
 {% block title %}Parts Hunter{% endblock %}
 
 {% block content %}
-<h1>قائمة المنتجات</h1>
+<h2>المنتجات</h2>
 
-<a href="{{ url_for('add_product') }}">إضافة منتج جديد</a>
+<!-- نموذج إضافة منتج -->
+<form action="{{ url_for('add_product') }}" method="POST" style="margin-bottom:20px;">
+    <input type="text" name="name" placeholder="اسم المنتج" required>
+    <select name="category" required>
+        <option value="">اختر التصنيف</option>
+        <option value="سيارات">سيارات</option>
+        <option value="أدوات كهربائية">أدوات كهربائية</option>
+        <option value="معدات تعدين">معدات تعدين</option>
+        <option value="معدات طاقة شمسية">معدات طاقة شمسية</option>
+    </select>
+    <input type="text" name="price" placeholder="السعر" required>
+    <input type="text" name="whatsapp_message" placeholder="رسالة واتساب (اختياري)">
+    <button type="submit">إضافة المنتج</button>
+</form>
 
-{% set categories = ["سيارات", "أدوات كهربائية", "معدات تعدين", "معدات طاقة شمسية"] %}
-
-{% for category in categories %}
-<h2>{{ category }}</h2>
-<ul>
-    {% for product in products if product.category == category %}
-    <li>
-        <strong>{{ product.name }}</strong> - {{ product.price }}
-        <a href="https://wa.me/249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank">واتساب</a>
-        <a href="{{ url_for('delete_product', product_id=product.id) }}" style="color:red;">حذف</a>
-    </li>
+<!-- عرض المنتجات حسب التصنيف -->
+{% set categories = ['سيارات', 'أدوات كهربائية', 'معدات تعدين', 'معدات طاقة شمسية'] %}
+{% for cat in categories %}
+    <h3>{{ cat }}</h3>
+    <ul>
+    {% for product in products if product.category == cat %}
+        <li>
+            {{ product.name }} - {{ product.price }}
+            <a href="https://wa.me/00249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank" style="color:green;">واتساب</a>
+            <a href="{{ url_for('delete_product', product_id=product.id) }}" style="color:red;">حذف</a>
+        </li>
     {% else %}
-    <li>لا توجد منتجات في هذه الفئة.</li>
+        <li>لا يوجد منتجات في هذا التصنيف</li>
     {% endfor %}
-</ul>
+    </ul>
 {% endfor %}
-
 {% endblock %}
