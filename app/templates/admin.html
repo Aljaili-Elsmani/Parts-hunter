@@ -1,41 +1,37 @@
 {% extends "base.html" %}
 
-{% block title %}إدارة المنتجات{% endblock %}
+{% block title %}إدارة المنتجات - Parts Hunter{% endblock %}
 
 {% block content %}
-<h1>إدارة المنتجات</h1>
+<h2>إدارة المنتجات</h2>
 
-<h2>قائمة المنتجات الحالية</h2>
-<table>
-    <tr>
-        <th>الاسم</th>
-        <th>السعر</th>
-        <th>الفئة</th>
-        <th>حذف</th>
-    </tr>
-    {% for product in products %}
-    <tr>
-        <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-        <td>{{ product.category }}</td>
-        <td><a href="{{ url_for('delete_product', id=product.id) }}" style="color:red;">حذف</a></td>
-    </tr>
-    {% endfor %}
-</table>
-
-<h2>إضافة منتج جديد</h2>
+<h3>إضافة منتج جديد</h3>
 <form method="POST">
-    <label>الاسم:</label>
-    <input type="text" name="name" required>
-    <label>السعر:</label>
-    <input type="text" name="price" required>
-    <label>الفئة:</label>
-    <select name="category" required>
-        <option value="سيارات">سيارات</option>
-        <option value="أدوات كهربائية">أدوات كهربائية</option>
-        <option value="معدات تعدين">معدات تعدين</option>
-        <option value="معدات طاقة شمسية">معدات طاقة شمسية</option>
-    </select>
-    <button type="submit">إضافة المنتج</button>
+  <label>الاسم:</label><br>
+  <input type="text" name="name" required><br>
+  <label>السعر:</label><br>
+  <input type="text" name="price" required><br>
+  <label>الفئة:</label><br>
+  <select name="category" required>
+    <option value="سيارات">سيارات</option>
+    <option value="أدوات كهربائية">أدوات كهربائية</option>
+    <option value="معدات تعدين">معدات تعدين</option>
+    <option value="معدات طاقة شمسية">معدات طاقة شمسية</option>
+  </select><br><br>
+  <button type="submit">إضافة المنتج</button>
 </form>
+
+<h3>المنتجات الحالية</h3>
+{% if products %}
+  <ul>
+    {% for product in products %}
+      <li>
+        {{ product.name }} - {{ product.price }} - {{ product.category }}
+        <a href="{{ url_for('delete_product', id=product.id) }}" style="color:red;">حذف</a>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>لا توجد منتجات حالياً.</p>
+{% endif %}
 {% endblock %}
