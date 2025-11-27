@@ -1,40 +1,32 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import render_template
+from app import app
 
-app = Flask(__name__)
-
-# بيانات وهمية للمنتجات (يمكنك لاحقاً ربطها بقاعدة بيانات)
+# قائمة المنتجات (مثال — يمكنك التعديل لاحقاً)
 products = [
     {
-        'name': 'بطارية سيارة',
-        'image': 'battery.jpg',
-        'whatsapp_message': 'أريد طلب بطارية سيارة'
+        "id": 1,
+        "name": "كمبروسر تويوتا",
+        "image": "/static/uploads/compressor.jpg",
+        "price": "3000 جنيه",
+        "whatsapp_message": "مرحباً، أريد الاستفسار عن كمبروسر تويوتا."
     },
     {
-        'name': 'مبرد مياه',
-        'image': 'cooler.jpg',
-        'whatsapp_message': 'أريد طلب مبرد مياه'
+        "id": 2,
+        "name": "محرك نيسان مستعمل",
+        "image": "/static/uploads/engine.jpg",
+        "price": "12000 جنيه",
+        "whatsapp_message": "مرحباً، أحتاج معلومات عن محرك نيسان المستعمل."
     }
 ]
 
+
 # الصفحة الرئيسية
-@app.route('/')
-def index():
-    return render_template('index.html', products=products)
+@app.route("/")
+def home():
+    return render_template("index.html", products=products)
 
-# صفحة طلب قطعة
-@app.route('/order')
+
+# صفحة الطلب (اختيارية — لو تحتاج رابط /order)
+@app.route("/order")
 def order():
-    return render_template('order.html')
-
-# صفحة اتصل بنا
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-# صفحة حول الموقع
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    return "صفحة الطلب ستضاف لاحقاً"
