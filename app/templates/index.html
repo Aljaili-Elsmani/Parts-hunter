@@ -1,51 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}الرئيسية - Parts Hunter{% endblock %}
+{% block title %}Parts Hunter{% endblock %}
 
 {% block content %}
-<h1>قائمة المنتجات</h1>
+<h1 style="text-align:center; margin-bottom:20px;">قائمة المنتجات</h1>
 
-<table border="1" cellpadding="10">
-    <thead>
-        <tr>
-            <th>الاسم</th>
-            <th>السعر</th>
-            <th>الفئة</th>
-            <th>التواصل</th>
-            <th>حذف</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for product in products %}
-        <tr>
-            <td>{{ product.name }}</td>
-            <td>{{ product.price }}</td>
-            <td>{{ product.category }}</td>
-            <td>
-                <a href="https://wa.me/00249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank" style="color:green;">واتساب</a>
-            </td>
-            <td>
-                <a href="{{ url_for('delete_product', id=product.id) }}" style="color:red;">حذف</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
-
-<!-- نموذج إضافة منتج جديد -->
-<h2>إضافة منتج جديد</h2>
-<form action="{{ url_for('add_product') }}" method="POST">
-    <label>الاسم: <input type="text" name="name" required></label><br><br>
-    <label>السعر: <input type="text" name="price" required></label><br><br>
-    <label>الفئة:
-        <select name="category" required>
-            <option value="سيارات">سيارات</option>
-            <option value="أدوات كهربائية">أدوات كهربائية</option>
-            <option value="معدات تعدين">معدات تعدين</option>
-            <option value="معدات طاقة شمسية">معدات طاقة شمسية</option>
-        </select>
-    </label><br><br>
-    <label>رسالة واتساب: <input type="text" name="whatsapp_message" required></label><br><br>
-    <button type="submit">إضافة المنتج</button>
-</form>
+<div class="product-grid">
+    {% for product in products %}
+    <div class="product-card">
+        <h3>{{ product.name }}</h3>
+        <p><strong>السعر:</strong> {{ product.price }}</p>
+        <p><strong>الفئة:</strong> {{ product.category }}</p>
+        <a class="whatsapp-btn" href="https://wa.me/249902355371?text=مرحباً، هل المنتج {{ product.name }} متوفر؟" target="_blank">
+            واتساب
+        </a>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}
