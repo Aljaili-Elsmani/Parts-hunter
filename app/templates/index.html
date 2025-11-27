@@ -1,24 +1,24 @@
 {% extends "base.html" %}
 
-{% block title %}الرئيسية{% endblock %}
+{% block title %}الرئيسية - Parts Hunter{% endblock %}
 
 {% block content %}
 <h1>منتجاتنا</h1>
-
-{% for category, items in products.items() %}
-  <h2>{{ category }}</h2>
-  <div class="product-category">
-    {% for product in items %}
-      <div class="product-card">
-        <img src="{{ product.image }}" alt="{{ product.name }}">
-        <h3>{{ product.name }}</h3>
-        <p>{{ product.price }}</p>
-        <a href="https://wa.me/249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank">
-          استفسر عبر واتساب
-        </a>
-      </div>
-    {% endfor %}
-  </div>
+{% for category, plist in products.items() %}
+    <h2>{{ category }}</h2>
+    {% if plist %}
+        {% for product in plist %}
+            <div class="product">
+                <h3>{{ product.name }}</h3>
+                <img src="{{ product.image }}" alt="{{ product.name }}" width="200">
+                <p>{{ product.price }}</p>
+                <a href="https://wa.me/00249902355371?text={{ product.whatsapp_message }}">طلب عبر واتساب</a>
+                <br>
+                <a href="{{ url_for('delete_product', category=category, product_id=product.id) }}" style="color:red;">حذف</a>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>لا توجد منتجات في هذه الفئة.</p>
+    {% endif %}
 {% endfor %}
-
 {% endblock %}
