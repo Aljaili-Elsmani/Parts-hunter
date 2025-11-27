@@ -1,113 +1,41 @@
-/* style.css */
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background-color: #f4f4f4;
-  color: #333;
-  margin: 0;
-  padding: 0;
-  direction: rtl;
+.products {
+  margin-top: 50px;
 }
 
-header {
-  background-color: #fff;
-  border-bottom: 4px solid #FFD700;
-  padding: 20px;
-  text-align: center;
-}
-
-header h1 {
-  margin: 0;
-  font-size: 2.5em;
-  color: #333;
-}
-
-.logo-bg {
-  position: fixed;
-  top: 20%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  opacity: 0.03;
-  z-index: 0;
-  pointer-events: none;
-}
-
-nav {
-  background-color: #f1f1f1;
-  padding: 10px 20px;
+.product-grid {
   display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
   justify-content: center;
-  gap: 15px;
 }
 
-nav a {
-  text-decoration: none;
-  color: #333;
-  font-weight: bold;
-}
-
-nav a:hover {
-  color: #FFD700;
-}
-
-.container {
-  padding: 20px;
-  max-width: 800px;
-  margin: auto;
-  z-index: 1;
-  position: relative;
-}
-
-footer {
-  background-color: #eee;
+.product-card {
+  border: 1px solid #ddd;
   padding: 15px;
+  width: 250px;
   text-align: center;
-  font-size: 0.9em;
-  color: #555;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  background-color: #fff;
 }
 
-.tab-button {
-  background-color: #ddd;
-  border: none;
-  padding: 10px 15px;
-  margin: 5px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: 0.3s;
-}
-
-.tab-button.active {
-  background-color: #FFD700;
-  color: #000;
-}
-
-.form-section {
-  display: none;
-}
-
-.form-section.active {
-  display: block;
-}
-
-input, select, textarea {
+.product-card img {
   width: 100%;
-  padding: 10px;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 8px;
 }
 
-button {
-  background-color: #FFD700;
-  color: #000;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  cursor: pointer;
+.order-btn {
+  margin-top: 10px;
+  display: inline-block;
+  padding: 8px 15px;
+  background-color: #25D366; /* لون WhatsApp */
+  color: white;
+  border-radius: 5px;
+  text-decoration: none;
   font-weight: bold;
 }
-
-button:hover {
-  background-color: #e6c200;
+.order-btn:hover {
+  background-color: #128C7E;
 }
