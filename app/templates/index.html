@@ -1,10 +1,15 @@
+{% extends "base.html" %}
+{% block title %}الصفحة الرئيسية - Parts Hunter{% endblock %}
+
 {% block content %}
+  <!-- قسم الترحيب -->
   <section class="hero">
     <h2>مرحباً بك في Parts Hunter</h2>
     <p>نوفّر لك قطع غيار المركبات والأجهزة الكهربائية من الإمارات إلى السودان، بجودة عالية وسعر مناسب.</p>
     <a href="{{ url_for('order') }}" class="btn">ابدأ الطلب الآن</a>
   </section>
 
+  <!-- خطوات استخدام الموقع -->
   <section class="steps">
     <h3>كيف يعمل الموقع؟</h3>
     <div class="step">✅ ١. اختر نوع المركبة أو الجهاز الكهربائي المطلوب</div>
@@ -21,7 +26,7 @@
           <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
           <h4>{{ product.name }}</h4>
           <p>{{ product.description }}</p>
-          <a href="https://wa.me/201234567890?text={{ product.whatsapp_message | url_encode }}" target="_blank" class="btn order-btn">طلب</a>
+          <a href="https://wa.me/201234567890?text={{ product.whatsapp_message | urlencode }}" target="_blank" class="btn order-btn">طلب</a>
         </div>
       {% endfor %}
     </div>
