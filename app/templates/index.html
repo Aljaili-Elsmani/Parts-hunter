@@ -1,24 +1,27 @@
 {% extends "base.html" %}
 
-{% block title %}الرئيسية - Parts Hunter{% endblock %}
+{% block title %}Parts Hunter{% endblock %}
 
 {% block content %}
-<h1>منتجاتنا</h1>
-{% for category, plist in products.items() %}
-    <h2>{{ category }}</h2>
-    {% if plist %}
-        {% for product in plist %}
-            <div class="product">
-                <h3>{{ product.name }}</h3>
-                <img src="{{ product.image }}" alt="{{ product.name }}" width="200">
-                <p>{{ product.price }}</p>
-                <a href="https://wa.me/00249902355371?text={{ product.whatsapp_message }}">طلب عبر واتساب</a>
-                <br>
-                <a href="{{ url_for('delete_product', category=category, product_id=product.id) }}" style="color:red;">حذف</a>
-            </div>
-        {% endfor %}
+<h1>قائمة المنتجات</h1>
+
+<a href="{{ url_for('add_product') }}">إضافة منتج جديد</a>
+
+{% set categories = ["سيارات", "أدوات كهربائية", "معدات تعدين", "معدات طاقة شمسية"] %}
+
+{% for category in categories %}
+<h2>{{ category }}</h2>
+<ul>
+    {% for product in products if product.category == category %}
+    <li>
+        <strong>{{ product.name }}</strong> - {{ product.price }}
+        <a href="https://wa.me/249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank">واتساب</a>
+        <a href="{{ url_for('delete_product', product_id=product.id) }}" style="color:red;">حذف</a>
+    </li>
     {% else %}
-        <p>لا توجد منتجات في هذه الفئة.</p>
-    {% endif %}
+    <li>لا توجد منتجات في هذه الفئة.</li>
+    {% endfor %}
+</ul>
 {% endfor %}
+
 {% endblock %}
