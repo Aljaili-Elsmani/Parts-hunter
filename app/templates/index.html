@@ -1,6 +1,3 @@
-{% extends "base.html" %}
-{% block title %}الصفحة الرئيسية - Parts Hunter{% endblock %}
-
 {% block content %}
   <section class="hero">
     <h2>مرحباً بك في Parts Hunter</h2>
@@ -13,5 +10,20 @@
     <div class="step">✅ ١. اختر نوع المركبة أو الجهاز الكهربائي المطلوب</div>
     <div class="step">📝 ٢. عبّئ نموذج الطلب بمواصفات القطعة</div>
     <div class="step">📞 ٣. سيتم التواصل معك عبر واتساب لتأكيد الطلب</div>
+  </section>
+
+  <!-- قسم معرض المنتجات -->
+  <section class="products">
+    <h3>معرض المنتجات</h3>
+    <div class="product-grid">
+      {% for product in products %}
+        <div class="product-card">
+          <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
+          <h4>{{ product.name }}</h4>
+          <p>{{ product.description }}</p>
+          <a href="https://wa.me/201234567890?text={{ product.whatsapp_message | url_encode }}" target="_blank" class="btn order-btn">طلب</a>
+        </div>
+      {% endfor %}
+    </div>
   </section>
 {% endblock %}
