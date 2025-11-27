@@ -1,34 +1,24 @@
 {% extends "base.html" %}
-{% block title %}الصفحة الرئيسية - Parts Hunter{% endblock %}
+
+{% block title %}الرئيسية{% endblock %}
 
 {% block content %}
-  <!-- قسم الترحيب -->
-  <section class="hero">
-    <h2>مرحباً بك في Parts Hunter</h2>
-    <p>نوفّر لك قطع غيار المركبات والأجهزة الكهربائية من الإمارات إلى السودان، بجودة عالية وسعر مناسب.</p>
-    <a href="{{ url_for('order') }}" class="btn">ابدأ الطلب الآن</a>
-  </section>
+<h1>منتجاتنا</h1>
 
-  <!-- خطوات استخدام الموقع -->
-  <section class="steps">
-    <h3>كيف يعمل الموقع؟</h3>
-    <div class="step">✅ ١. اختر نوع المركبة أو الجهاز الكهربائي المطلوب</div>
-    <div class="step">📝 ٢. عبّئ نموذج الطلب بمواصفات القطعة</div>
-    <div class="step">📞 ٣. سيتم التواصل معك عبر واتساب لتأكيد الطلب</div>
-  </section>
+{% for category, items in products.items() %}
+  <h2>{{ category }}</h2>
+  <div class="product-category">
+    {% for product in items %}
+      <div class="product-card">
+        <img src="{{ product.image }}" alt="{{ product.name }}">
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.price }}</p>
+        <a href="https://wa.me/249902355371?text={{ product.whatsapp_message | urlencode }}" target="_blank">
+          استفسر عبر واتساب
+        </a>
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}
 
-  <!-- قسم معرض المنتجات -->
-  <section class="products">
-    <h3>معرض المنتجات</h3>
-    <div class="product-grid">
-      {% for product in products %}
-        <div class="product-card">
-          <img src="{{ url_for('static', filename='images/' + product.image) }}" alt="{{ product.name }}">
-          <h4>{{ product.name }}</h4>
-          <p>{{ product.description }}</p>
-          <a href="https://wa.me/201234567890?text={{ product.whatsapp_message | urlencode }}" target="_blank" class="btn order-btn">طلب</a>
-        </div>
-      {% endfor %}
-    </div>
-  </section>
 {% endblock %}
