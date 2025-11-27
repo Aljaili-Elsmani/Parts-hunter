@@ -7,21 +7,27 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-<header>
-    <nav>
-        <ul>
-            <li><a href="{{ url_for('home') }}">الرئيسية</a></li>
-            <li><a href="{{ url_for('admin') }}">إدارة المنتجات</a></li>
-        </ul>
-    </nav>
-</header>
+    <!-- رأس الصفحة / القائمة -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">الرئيسية</a></li>
+                <li><a href="{{ url_for('admin') }}">إدارة المنتجات</a></li>
+                <li><a href="{{ url_for('contact') }}">اتصل بنا</a></li>
+                <li><a href="{{ url_for('about') }}">حول الموقع</a></li>
+            </ul>
+        </nav>
+    </header>
 
-<main>
-    {% block content %}{% endblock %}
-</main>
+    <!-- محتوى الصفحات -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 
-<footer>
-    <p>&copy; 2025 Parts Hunter. جميع الحقوق محفوظة.</p>
-</footer>
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>&copy; 2025 Parts Hunter. جميع الحقوق محفوظة.</p>
+    </footer>
 </body>
 </html>
