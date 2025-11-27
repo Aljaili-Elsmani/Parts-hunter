@@ -1,40 +1,33 @@
-from flask import Flask, render_template, request, redirect, url_for
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Parts Hunter{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <!-- رأس الصفحة / القائمة -->
+    <header>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('index') }}">الرئيسية</a></li>
+                <li><a href="{{ url_for('order') }}">طلب قطعة</a></li>
+                <li><a href="{{ url_for('contact') }}">اتصل بنا</a></li>
+                <li><a href="{{ url_for('about') }}">حول الموقع</a></li>
+            </ul>
+        </nav>
+    </header>
 
-app = Flask(__name__)
+    <!-- محتوى الصفحات -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
 
-# بيانات وهمية للمنتجات (يمكنك لاحقاً ربطها بقاعدة بيانات)
-products = [
-    {
-        'name': 'بطارية سيارة',
-        'image': 'battery.jpg',
-        'whatsapp_message': 'أريد طلب بطارية سيارة'
-    },
-    {
-        'name': 'مبرد مياه',
-        'image': 'cooler.jpg',
-        'whatsapp_message': 'أريد طلب مبرد مياه'
-    }
-]
-
-# الصفحة الرئيسية
-@app.route('/')
-def index():
-    return render_template('index.html', products=products)
-
-# صفحة طلب قطعة
-@app.route('/order')
-def order():
-    return render_template('order.html')
-
-# صفحة اتصل بنا
-@app.route('/contact')
-def contact():
-    return render_template('contact.html')
-
-# صفحة حول الموقع
-@app.route('/about')
-def about():
-    return render_template('about.html')
-
-if __name__ == '__main__':
-    app.run(debug=True)
+    <!-- تذييل الصفحة -->
+    <footer>
+        <p>&copy; 2025 Parts Hunter. جميع الحقوق محفوظة.</p>
+    </footer>
+</body>
+</html>
