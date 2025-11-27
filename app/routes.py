@@ -9,22 +9,21 @@ products = [
     {"id": 3, "name": "دربكين كهرباء", "price": "2000", "category": "أدوات كهربائية"}
 ]
 
-# الصفحة الرئيسية للزوار
+# الصفحة الرئيسية
 @app.route("/")
-def home():
+def index():
     return render_template("index.html", products=products)
 
-# صفحة إدارة المنتجات (Admin)
+# صفحة إدارة المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     if request.method == "POST":
         # إضافة منتج جديد
+        new_id = max([p["id"] for p in products]) + 1 if products else 1
         name = request.form.get("name")
         price = request.form.get("price")
         category = request.form.get("category")
-        if name and price and category:
-            new_id = max([p["id"] for p in products], default=0) + 1
-            products.append({"id": new_id, "name": name, "price": price, "category": category})
+        products.append({"id": new_id, "name": name, "price": price, "category": category})
         return redirect(url_for("admin"))
     return render_template("admin.html", products=products)
 
@@ -34,6 +33,16 @@ def delete_product(id):
     global products
     products = [p for p in products if p["id"] != id]
     return redirect(url_for("admin"))
+
+# صفحة اتصل بنا
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+# صفحة حول الموقع
+@app.route("/about")
+def about():
+    return render_template("about.html")
 
 if __name__ == "__main__":
     app.run(debug=True)
