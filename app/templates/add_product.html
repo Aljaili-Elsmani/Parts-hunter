@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}إضافة منتج{% endblock %}
+
+{% block content %}
+<h1>إضافة منتج جديد</h1>
+<form method="POST">
+    <label>اسم المنتج:</label><br>
+    <input type="text" name="name" required><br><br>
+
+    <label>فئة المنتج:</label><br>
+    <select name="category" required>
+        {% for cat in categories %}
+        <option value="{{ cat }}">{{ cat }}</option>
+        {% endfor %}
+    </select><br><br>
+
+    <label>رابط الصورة:</label><br>
+    <input type="text" name="image" placeholder="/static/uploads/filename.jpg" required><br><br>
+
+    <label>السعر:</label><br>
+    <input type="text" name="price" required><br><br>
+
+    <label>رسالة واتساب:</label><br>
+    <input type="text" name="whatsapp_message" required><br><br>
+
+    <button type="submit">إضافة المنتج</button>
+</form>
+{% endblock %}
