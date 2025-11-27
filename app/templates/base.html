@@ -7,7 +7,6 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <!-- رأس الصفحة / القائمة -->
     <header>
         <nav>
             <ul>
@@ -19,13 +18,10 @@
         </nav>
     </header>
 
-    <!-- محتوى الصفحات -->
     <main>
-        {% block content %}
-        {% endblock %}
+        {% block content %}{% endblock %}
     </main>
 
-    <!-- تذييل الصفحة -->
     <footer>
         <p>&copy; 2025 Parts Hunter. جميع الحقوق محفوظة.</p>
     </footer>
