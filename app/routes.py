@@ -1,31 +1,18 @@
-from app import app
-from flask import render_template
+from flask import Flask, render_template, request, redirect, url_for
 
-# قائمة المنتجات للمعرض
+app = Flask(__name__)
+
+# بيانات وهمية للمنتجات (يمكنك لاحقاً ربطها بقاعدة بيانات)
 products = [
     {
-        'name': 'بطارية سيارة 12V',
-        'description': 'بطارية عالية الجودة تناسب جميع السيارات الصغيرة.',
+        'name': 'بطارية سيارة',
         'image': 'battery.jpg',
-        'whatsapp_message': 'مرحباً، أرغب بطلب بطارية سيارة 12V من موقع Parts Hunter'
-    },
-    {
-        'name': 'مولد كهرباء صغير',
-        'description': 'مولد محمول للطوارئ.',
-        'image': 'generator.jpg',
-        'whatsapp_message': 'مرحباً، أرغب بطلب مولد كهرباء صغير من موقع Parts Hunter'
+        'whatsapp_message': 'أريد طلب بطارية سيارة'
     },
     {
         'name': 'مبرد مياه',
-        'description': 'مبرد مياه عالي الكفاءة.',
         'image': 'cooler.jpg',
-        'whatsapp_message': 'مرحباً، أرغب بطلب مبرد مياه من موقع Parts Hunter'
-    },
-    {
-        'name': 'فانوس LED',
-        'description': 'مصباح LED محمول للسيارة.',
-        'image': 'led_lamp.jpg',
-        'whatsapp_message': 'مرحباً، أرغب بطلب فانوس LED من موقع Parts Hunter'
+        'whatsapp_message': 'أريد طلب مبرد مياه'
     }
 ]
 
@@ -34,7 +21,20 @@ products = [
 def index():
     return render_template('index.html', products=products)
 
-# صفحة الطلب
+# صفحة طلب قطعة
 @app.route('/order')
 def order():
     return render_template('order.html')
+
+# صفحة اتصل بنا
+@app.route('/contact')
+def contact():
+    return render_template('contact.html')
+
+# صفحة حول الموقع
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+if __name__ == '__main__':
+    app.run(debug=True)
