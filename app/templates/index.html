@@ -10,10 +10,10 @@
         <h3>{{ product[1] }}</h3>
         <p>السعر: {{ product[2] }}</p>
         <p>الفئة: {{ product[3] }}</p>
-        <a href="https://wa.me/00249902355371?text={{ product[4] }}" target="_blank" class="whatsapp-btn">طلب عبر واتساب</a>
+        <a href="https://wa.me/00249902355371?text=هل المنتج {{ product[1] }} متوفر؟" target="_blank" class="btn-whatsapp">اطلب عبر واتساب</a>
     </div>
     {% else %}
-    <p>لا توجد منتجات مضافة بعد.</p>
+    <p>لا توجد منتجات حتى الآن.</p>
     {% endfor %}
 </div>
 {% endblock %}
