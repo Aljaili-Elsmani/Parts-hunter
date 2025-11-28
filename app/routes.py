@@ -1,29 +1,28 @@
-from flask import render_template, request, redirect, url_for, flash
-from app import app
+from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
-DB_PATH = "app/database.db"
+app = Flask(__name__)
+
+DB_PATH = "database.db"
 
 # إنشاء قاعدة البيانات إذا لم تكن موجودة
 def init_db():
     if not os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute("""
-            CREATE TABLE products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                price TEXT NOT NULL,
-                category TEXT NOT NULL
-            )
-        """)
+        c.execute('''CREATE TABLE products (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        name TEXT NOT NULL,
+                        price TEXT NOT NULL,
+                        category TEXT NOT NULL,
+                        whatsapp_msg TEXT
+                    )''')
         conn.commit()
         conn.close()
 
 init_db()
 
-# الصفحة الرئيسية
 @app.route("/")
 def index():
     conn = sqlite3.connect(DB_PATH)
@@ -33,47 +32,34 @@ def index():
     conn.close()
     return render_template("index.html", products=products)
 
-# صفحة الإدارة لإضافة وحذف المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
 
     if request.method == "POST":
-        name = request.form.get("name")
-        price = request.form.get("price")
-        category = request.form.get("category")
-
-        if name and price and category:
-            c.execute("INSERT INTO products (name, price, category) VALUES (?, ?, ?)", 
-                      (name, price, category))
-            conn.commit()
-            flash("تمت إضافة المنتج بنجاح!", "success")
+        name = request.form["name"]
+        price = request.form["price"]
+        category = request.form["category"]
+        whatsapp_msg = "هل المنتج متوفر؟"  # رسالة واتساب موحدة
+        c.execute("INSERT INTO products (name, price, category, whatsapp_msg) VALUES (?, ?, ?, ?)",
+                  (name, price, category, whatsapp_msg))
+        conn.commit()
         return redirect(url_for("admin"))
 
-    # جلب جميع المنتجات لعرضها في صفحة الإدارة
     c.execute("SELECT * FROM products")
     products = c.fetchall()
     conn.close()
     return render_template("admin.html", products=products)
 
-# حذف منتج
 @app.route("/delete/<int:product_id>")
-def delete_product(product_id):
+def delete(product_id):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("DELETE FROM products WHERE id = ?", (product_id,))
+    c.execute("DELETE FROM products WHERE id=?", (product_id,))
     conn.commit()
     conn.close()
-    flash("تم حذف المنتج بنجاح!", "success")
     return redirect(url_for("admin"))
 
-# صفحة الاتصال بنا
-@app.route("/contact")
-def contact():
-    return render_template("contact.html")
-
-# صفحة حول الموقع
-@app.route("/about")
-def about():
-    return render_template("about.html")
+if __name__ == "__main__":
+    app.run(debug=True, port=10000)
