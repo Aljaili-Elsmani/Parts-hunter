@@ -3,7 +3,8 @@ from app import app
 import sqlite3
 import os
 
-DB_NAME = "/opt/render/project/src/database.db"
+# مسار قاعدة البيانات
+DB_NAME = os.path.join(os.path.dirname(__file__), "..", "database.db")
 
 # الصفحة الرئيسية
 @app.route("/")
@@ -48,10 +49,12 @@ def delete_product(id):
     conn.close()
     return redirect(url_for("admin"))
 
+# صفحة الاتصال بنا
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
 
+# صفحة حول الموقع
 @app.route("/about")
 def about():
     return render_template("about.html")
