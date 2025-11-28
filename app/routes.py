@@ -1,24 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for
 import sqlite3
 import os
+from app import app
 
-app = Flask(__name__)
-DB_NAME = "database.db"
-
-# إنشاء قاعدة البيانات إذا لم تكن موجودة
-if not os.path.exists(DB_NAME):
-    conn = sqlite3.connect(DB_NAME)
-    c = conn.cursor()
-    c.execute("""
-        CREATE TABLE products (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL,
-            price TEXT NOT NULL,
-            category TEXT NOT NULL
-        )
-    """)
-    conn.commit()
-    conn.close()
+DB_NAME = os.path.join(os.path.dirname(__file__), "..", "database.db")
 
 # الصفحة الرئيسية
 @app.route("/")
@@ -39,7 +24,8 @@ def admin():
         category = request.form["category"]
         conn = sqlite3.connect(DB_NAME)
         c = conn.cursor()
-        c.execute("INSERT INTO products (name, price, category) VALUES (?, ?, ?)", (name, price, category))
+        c.execute("INSERT INTO products (name, price, category) VALUES (?, ?, ?)",
+                  (name, price, category))
         conn.commit()
         conn.close()
         return redirect(url_for("admin"))
@@ -61,15 +47,10 @@ def delete_product(id):
     conn.close()
     return redirect(url_for("admin"))
 
-# صفحة الاتصال بنا
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
 
-# صفحة حول الموقع
 @app.route("/about")
 def about():
     return render_template("about.html")
-
-if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port=10000)
