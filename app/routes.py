@@ -1,13 +1,18 @@
 from flask import Flask, render_template, request, redirect, url_for
+import sqlite3
 
 app = Flask(__name__)
 
-# بيانات المنتجات
-products = []
+DB_PATH = "database.db"
 
 # الصفحة الرئيسية
 @app.route('/')
 def index():
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT * FROM products")
+    products = c.fetchall()
+    conn.close()
     return render_template("index.html", products=products)
 
 # صفحة إدارة المنتجات
@@ -17,32 +22,33 @@ def admin():
         name = request.form['name']
         price = request.form['price']
         category = request.form['category']
-        product = {
-            'name': name,
-            'price': price,
-            'category': category
-        }
-        products.append(product)
+        whatsapp_message = request.form.get('whatsapp_message', "هل المنتج متوفر؟")
+
+        conn = sqlite3.connect(DB_PATH)
+        c = conn.cursor()
+        c.execute("INSERT INTO products (name, price, category, whatsapp_message) VALUES (?, ?, ?, ?)",
+                  (name, price, category, whatsapp_message))
+        conn.commit()
+        conn.close()
         return redirect(url_for('admin'))
+
+    # عرض جميع المنتجات
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("SELECT * FROM products")
+    products = c.fetchall()
+    conn.close()
     return render_template("admin.html", products=products)
 
-# حذف منتج
-@app.route('/delete/<int:index>')
-def delete(index):
-    if 0 <= index < len(products):
-        products.pop(index)
+# حذف المنتج
+@app.route('/delete/<int:id>')
+def delete_product(id):
+    conn = sqlite3.connect(DB_PATH)
+    c = conn.cursor()
+    c.execute("DELETE FROM products WHERE id = ?", (id,))
+    conn.commit()
+    conn.close()
     return redirect(url_for('admin'))
 
-# صفحة اتصل بنا
-@app.route('/contact')
-def contact():
-    return render_template("contact.html")
-
-# صفحة حول الموقع
-@app.route('/about')
-def about():
-    return render_template("about.html")
-
-
 if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0', port=10000)
+    app.run(debug=True)
