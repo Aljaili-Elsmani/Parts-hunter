@@ -8,13 +8,13 @@ body {
 header {
     background: #333;
     color: white;
-    padding: 15px 0;
+    padding: 10px 0;
 }
 
 header nav ul {
     display: flex;
-    list-style: none;
     justify-content: center;
+    list-style: none;
     margin: 0;
     padding: 0;
 }
@@ -30,7 +30,9 @@ header nav ul li a {
 }
 
 main {
-    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
 }
 
 .products-grid {
@@ -41,52 +43,23 @@ main {
 
 .product-card {
     background: white;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     text-align: center;
 }
 
-.whatsapp-btn {
+.product-card h3 {
+    margin: 0 0 10px;
+}
+
+.btn-whatsapp {
     display: inline-block;
     background: #25D366;
     color: white;
     padding: 10px 20px;
-    margin-top: 10px;
     border-radius: 30px;
     text-decoration: none;
     font-weight: bold;
-}
-
-form input, form select, form button {
-    display: block;
-    margin: 10px 0;
-    padding: 8px;
-    width: 100%;
-    max-width: 300px;
-}
-
-.delete-btn {
-    background: #ff4d4d;
-    color: white;
-    padding: 5px 10px;
-    text-decoration: none;
-    border-radius: 5px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-table th, table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: center;
-}
-
-table th {
-    background: #333;
-    color: white;
+    margin-top: 10px;
 }
