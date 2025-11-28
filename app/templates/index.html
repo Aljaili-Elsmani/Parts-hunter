@@ -4,20 +4,16 @@
 
 {% block content %}
 <h2>قائمة المنتجات</h2>
-
 <div class="products-grid">
-    {% if products %}
-        {% for product in products %}
-        <div class="product-card">
-            <h3>{{ product[1] }}</h3>
-            <p>السعر: {{ product[2] }} جنيه</p>
-            <p>الفئة: {{ product[3] }}</p>
-            <a href="https://wa.me/249902355371?text=مرحبًا، هل المنتج {{ product[1] }} متوفر؟" 
-               target="_blank" class="btn-whatsapp">اطلب عبر واتساب</a>
-        </div>
-        {% endfor %}
+    {% for product in products %}
+    <div class="product-card">
+        <h3>{{ product[1] }}</h3>
+        <p>السعر: {{ product[2] }}</p>
+        <p>الفئة: {{ product[3] }}</p>
+        <a href="https://wa.me/00249902355371?text={{ product[4] }}" target="_blank" class="whatsapp-btn">طلب عبر واتساب</a>
+    </div>
     {% else %}
-        <p>لا توجد منتجات حتى الآن.</p>
-    {% endif %}
+    <p>لا توجد منتجات مضافة بعد.</p>
+    {% endfor %}
 </div>
 {% endblock %}
