@@ -1,10 +1,11 @@
 from flask import render_template, request, redirect, url_for
+from app import app
 import sqlite3
 import os
-from app import app
 
-DB_NAME = os.path.join(os.path.dirname(os.path.dirname(__file__)), "database.db")
+DB_NAME = "/opt/render/project/src/database.db"
 
+# الصفحة الرئيسية
 @app.route("/")
 def index():
     conn = sqlite3.connect(DB_NAME)
@@ -14,6 +15,7 @@ def index():
     conn.close()
     return render_template("index.html", products=products)
 
+# صفحة إدارة المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     if request.method == "POST":
@@ -27,7 +29,6 @@ def admin():
                   (name, price, category))
         conn.commit()
         conn.close()
-
         return redirect(url_for("admin"))
 
     conn = sqlite3.connect(DB_NAME)
@@ -35,14 +36,14 @@ def admin():
     c.execute("SELECT * FROM products")
     products = c.fetchall()
     conn.close()
-
     return render_template("admin.html", products=products)
 
+# حذف منتج
 @app.route("/delete/<int:id>")
 def delete_product(id):
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
-    c.execute("DELETE FROM products WHERE id=?", (id,))
+    c.execute("DELETE FROM products WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return redirect(url_for("admin"))
