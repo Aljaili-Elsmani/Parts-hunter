@@ -1,22 +1,15 @@
 {% extends "base.html" %}
+
 {% block title %}إدارة المنتجات - Parts Hunter{% endblock %}
 
 {% block content %}
-<h1>إدارة المنتجات</h1>
+<h2>إدارة المنتجات</h2>
 
-{% with messages = get_flashed_messages(with_categories=true) %}
-  {% if messages %}
-    {% for category, msg in messages %}
-      <div class="flash {{ category }}">{{ msg }}</div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
-
+<h3>إضافة منتج جديد</h3>
 <form method="POST">
     <input type="text" name="name" placeholder="اسم المنتج" required>
     <input type="text" name="price" placeholder="السعر" required>
     <select name="category" required>
-        <option value="">اختر الفئة</option>
         <option value="سيارات">سيارات</option>
         <option value="أدوات كهربائية">أدوات كهربائية</option>
         <option value="معدات تعدين">معدات تعدين</option>
@@ -25,20 +18,20 @@
     <button type="submit">إضافة المنتج</button>
 </form>
 
-<h2>المنتجات الحالية</h2>
+<h3>المنتجات الحالية</h3>
 <table>
     <tr>
         <th>الاسم</th>
         <th>السعر</th>
         <th>الفئة</th>
-        <th>حذف</th>
+        <th>إجراء</th>
     </tr>
     {% for product in products %}
     <tr>
         <td>{{ product[1] }}</td>
         <td>{{ product[2] }}</td>
         <td>{{ product[3] }}</td>
-        <td><a href="{{ url_for('delete_product', product_id=product[0]) }}">حذف</a></td>
+        <td><a href="{{ url_for('delete', product_id=product[0]) }}" class="delete-btn">حذف</a></td>
     </tr>
     {% endfor %}
 </table>
