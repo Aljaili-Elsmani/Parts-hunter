@@ -1,21 +1,19 @@
 {% extends "base.html" %}
-
 {% block title %}الرئيسية - Parts Hunter{% endblock %}
 
 {% block content %}
-<h2>قائمة المنتجات</h2>
-{% if products %}
-<div class="grid">
-    {% for product in products %}
-    <div class="product-card">
-        <h3>{{ product.name }}</h3>
-        <p><strong>السعر:</strong> {{ product.price }} جنيه</p>
-        <p><strong>الفئة:</strong> {{ product.category }}</p>
-        <a href="https://wa.me/00249902355371?text=هل%20المنتج%20{{ product.name }}%20متوفر؟" target="_blank" class="btn-wp">واتساب</a>
-    </div>
-    {% endfor %}
+<h1>منتجاتنا</h1>
+<div class="products-grid">
+    {% if products %}
+        {% for product in products %}
+        <div class="product-card">
+            <h3>{{ product[1] }}</h3>
+            <p>السعر: {{ product[2] }}</p>
+            <p>الفئة: {{ product[3] }}</p>
+        </div>
+        {% endfor %}
+    {% else %}
+        <p>لا توجد منتجات حتى الآن.</p>
+    {% endif %}
 </div>
-{% else %}
-<p>لا توجد منتجات حاليا.</p>
-{% endif %}
 {% endblock %}
