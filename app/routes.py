@@ -3,12 +3,27 @@ from app import app
 import sqlite3
 import os
 
-# مسار قاعدة البيانات
 DB_NAME = os.path.join(os.path.dirname(__file__), "..", "database.db")
+
+# دالة لإنشاء قاعدة البيانات والجدول إذا لم يكن موجودًا
+def init_db():
+    if not os.path.exists(DB_NAME):
+        with sqlite3.connect(DB_NAME) as conn:
+            c = conn.cursor()
+            c.execute("""
+                CREATE TABLE products (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT NOT NULL,
+                    price TEXT NOT NULL,
+                    category TEXT NOT NULL
+                )
+            """)
+            conn.commit()
 
 # الصفحة الرئيسية
 @app.route("/")
 def index():
+    init_db()  # تأكد من وجود الجدول قبل أي استعلام
     conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT * FROM products")
@@ -19,6 +34,7 @@ def index():
 # صفحة إدارة المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
+    init_db()
     if request.method == "POST":
         name = request.form["name"]
         price = request.form["price"]
@@ -49,12 +65,10 @@ def delete_product(id):
     conn.close()
     return redirect(url_for("admin"))
 
-# صفحة الاتصال بنا
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
 
-# صفحة حول الموقع
 @app.route("/about")
 def about():
     return render_template("about.html")
