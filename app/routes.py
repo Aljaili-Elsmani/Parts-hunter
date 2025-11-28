@@ -1,35 +1,29 @@
-# routes.py
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
 app = Flask(__name__)
-
-# مسار قاعدة البيانات
-DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
+DB_NAME = "database.db"
 
 # إنشاء قاعدة البيانات إذا لم تكن موجودة
-def init_db():
-    if not os.path.exists(DB_PATH):
-        conn = sqlite3.connect(DB_PATH)
-        c = conn.cursor()
-        c.execute("""
-            CREATE TABLE products (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                name TEXT NOT NULL,
-                price TEXT NOT NULL,
-                category TEXT NOT NULL
-            )
-        """)
-        conn.commit()
-        conn.close()
-
-init_db()
+if not os.path.exists(DB_NAME):
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
+    c.execute("""
+        CREATE TABLE products (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL,
+            price TEXT NOT NULL,
+            category TEXT NOT NULL
+        )
+    """)
+    conn.commit()
+    conn.close()
 
 # الصفحة الرئيسية
 @app.route("/")
 def index():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("SELECT * FROM products")
     products = c.fetchall()
@@ -39,16 +33,19 @@ def index():
 # صفحة إدارة المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
     if request.method == "POST":
         name = request.form["name"]
         price = request.form["price"]
         category = request.form["category"]
+        conn = sqlite3.connect(DB_NAME)
+        c = conn.cursor()
         c.execute("INSERT INTO products (name, price, category) VALUES (?, ?, ?)", (name, price, category))
         conn.commit()
+        conn.close()
         return redirect(url_for("admin"))
 
+    conn = sqlite3.connect(DB_NAME)
+    c = conn.cursor()
     c.execute("SELECT * FROM products")
     products = c.fetchall()
     conn.close()
@@ -56,15 +53,15 @@ def admin():
 
 # حذف منتج
 @app.route("/delete/<int:id>")
-def delete(id):
-    conn = sqlite3.connect(DB_PATH)
+def delete_product(id):
+    conn = sqlite3.connect(DB_NAME)
     c = conn.cursor()
     c.execute("DELETE FROM products WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return redirect(url_for("admin"))
 
-# صفحة اتصل بنا
+# صفحة الاتصال بنا
 @app.route("/contact")
 def contact():
     return render_template("contact.html")
