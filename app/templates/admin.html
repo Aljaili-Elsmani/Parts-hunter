@@ -1,12 +1,20 @@
 {% extends "base.html" %}
-
 {% block title %}إدارة المنتجات - Parts Hunter{% endblock %}
 
 {% block content %}
-<h2>إضافة منتج جديد</h2>
+<h1>إدارة المنتجات</h1>
+
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+    {% for category, msg in messages %}
+      <div class="flash {{ category }}">{{ msg }}</div>
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
 <form method="POST">
     <input type="text" name="name" placeholder="اسم المنتج" required>
-    <input type="number" name="price" placeholder="السعر" required>
+    <input type="text" name="price" placeholder="السعر" required>
     <select name="category" required>
         <option value="">اختر الفئة</option>
         <option value="سيارات">سيارات</option>
@@ -18,7 +26,6 @@
 </form>
 
 <h2>المنتجات الحالية</h2>
-{% if products %}
 <table>
     <tr>
         <th>الاسم</th>
@@ -28,14 +35,11 @@
     </tr>
     {% for product in products %}
     <tr>
-        <td>{{ product.name }}</td>
-        <td>{{ product.price }}</td>
-        <td>{{ product.category }}</td>
-        <td><a href="{{ url_for('delete', index=loop.index0) }}" class="delete-btn">حذف</a></td>
+        <td>{{ product[1] }}</td>
+        <td>{{ product[2] }}</td>
+        <td>{{ product[3] }}</td>
+        <td><a href="{{ url_for('delete_product', product_id=product[0]) }}">حذف</a></td>
     </tr>
     {% endfor %}
 </table>
-{% else %}
-<p>لا توجد منتجات حاليا.</p>
-{% endif %}
 {% endblock %}
