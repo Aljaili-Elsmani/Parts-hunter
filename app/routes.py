@@ -1,28 +1,32 @@
+# routes.py
 from flask import Flask, render_template, request, redirect, url_for
 import sqlite3
 import os
 
 app = Flask(__name__)
 
-DB_PATH = "database.db"
+# مسار قاعدة البيانات
+DB_PATH = os.path.join(os.path.dirname(__file__), "database.db")
 
 # إنشاء قاعدة البيانات إذا لم تكن موجودة
 def init_db():
     if not os.path.exists(DB_PATH):
         conn = sqlite3.connect(DB_PATH)
         c = conn.cursor()
-        c.execute('''CREATE TABLE products (
-                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        name TEXT NOT NULL,
-                        price TEXT NOT NULL,
-                        category TEXT NOT NULL,
-                        whatsapp_msg TEXT
-                    )''')
+        c.execute("""
+            CREATE TABLE products (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                name TEXT NOT NULL,
+                price TEXT NOT NULL,
+                category TEXT NOT NULL
+            )
+        """)
         conn.commit()
         conn.close()
 
 init_db()
 
+# الصفحة الرئيسية
 @app.route("/")
 def index():
     conn = sqlite3.connect(DB_PATH)
@@ -32,18 +36,16 @@ def index():
     conn.close()
     return render_template("index.html", products=products)
 
+# صفحة إدارة المنتجات
 @app.route("/admin", methods=["GET", "POST"])
 def admin():
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-
     if request.method == "POST":
         name = request.form["name"]
         price = request.form["price"]
         category = request.form["category"]
-        whatsapp_msg = "هل المنتج متوفر؟"  # رسالة واتساب موحدة
-        c.execute("INSERT INTO products (name, price, category, whatsapp_msg) VALUES (?, ?, ?, ?)",
-                  (name, price, category, whatsapp_msg))
+        c.execute("INSERT INTO products (name, price, category) VALUES (?, ?, ?)", (name, price, category))
         conn.commit()
         return redirect(url_for("admin"))
 
@@ -52,14 +54,25 @@ def admin():
     conn.close()
     return render_template("admin.html", products=products)
 
-@app.route("/delete/<int:product_id>")
-def delete(product_id):
+# حذف منتج
+@app.route("/delete/<int:id>")
+def delete(id):
     conn = sqlite3.connect(DB_PATH)
     c = conn.cursor()
-    c.execute("DELETE FROM products WHERE id=?", (product_id,))
+    c.execute("DELETE FROM products WHERE id = ?", (id,))
     conn.commit()
     conn.close()
     return redirect(url_for("admin"))
 
+# صفحة اتصل بنا
+@app.route("/contact")
+def contact():
+    return render_template("contact.html")
+
+# صفحة حول الموقع
+@app.route("/about")
+def about():
+    return render_template("about.html")
+
 if __name__ == "__main__":
-    app.run(debug=True, port=10000)
+    app.run(debug=True, host="0.0.0.0", port=10000)
